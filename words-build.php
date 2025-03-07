@@ -48,6 +48,7 @@ function prenoms()
 function words()
 {
     $words = [];
+    $duplicates = [];
     $handle = @fopen("word.csv", "r");
     if ($handle) {
         while (($line = fgets($handle, 4096)) !== false) {
@@ -55,8 +56,14 @@ function words()
             $data = str_getcsv($line, ";");
             // take first one
             $graph = $data[0];
-            if (isset($words[$graph])) continue;
-            $words[$graph] = $data[1];
+            $cat = $data[1];
+            // get first cat
+            if (!isset($words[$graph])) {
+                $words[$graph] = $cat;
+            }
+            else {
+                $duplicates[$graph] = $words[$graph];
+            }
             /*
             if ($data[3] != 1) continue;
             $lem = $data[0];
@@ -80,6 +87,9 @@ function words()
         }
         fclose($handle);
     }
+    print_r($duplicates);
+    return;
+
     rename("grammalecte.tsv", "_grammalecte.tsv");
     $read = @fopen("_grammalecte.tsv", "r");
     $write = @fopen("grammalecte.tsv", "w");
