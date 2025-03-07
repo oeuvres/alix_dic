@@ -86,19 +86,20 @@ function words()
     if ($read) {
         while (($line = fgets($read, 4096)) !== false) {
             $data = str_getcsv($line, "\t");
-            $lem = $data[1];
+            $graph = $data[0];
             $cat = $data[2];
             if (
-                !isset($lemmata[$lem])
-                || !$lemmata[$lem]
-                || $cat == 'VERBppas'
-                || $cat == 'VERBger'
+                !isset($words[$graph])
+                || $cat != '?'
             ) {
                 fwrite($write, $line);
                 continue;
             }
-            $data[2] = $lemmata[$lem];
-            fwrite($write, implode("\t", $data) . "\n");
+            // a cat to import
+            else {
+                $data[2] = $words[$graph];
+                fwrite($write, implode("\t", $data) . "\n");
+            }
         }
         if (!feof($read)) {
             echo "Error: unexpected fgets() fail\n";
