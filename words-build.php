@@ -45,7 +45,7 @@ function prenoms()
     }
 }
 
-function words()
+function merge()
 {
     $words = [];
     $duplicates = [];
@@ -120,4 +120,23 @@ function words()
     unlink("_grammalecte.tsv");
 }
 
-words();
+function toWord()
+{
+    $read = @fopen("grammalecte.tsv", "r");
+    $write = @fopen("../alix/src/main/resources/com/github/oeuvres/alix/fr/word.tsv", "w");
+    if ($read) {
+        while (($line = fgets($read, 4096)) !== false) {
+            $data = str_getcsv($line, "\t");
+            if ($data[0] == $data[1]) $data[1] = "";
+            $data = array_slice($data, 0, 3);
+            fwrite($write, implode("\t", $data) . "\n");
+        }
+        if (!feof($read)) {
+            echo "Error: unexpected fgets() fail\n";
+        }
+        fclose($read);
+        fclose($write);
+    }
+}
+
+toWord();
