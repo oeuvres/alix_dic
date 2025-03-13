@@ -123,13 +123,13 @@ function merge()
 function toWord()
 {
     $read = @fopen(__DIR__ . "/grammalecte.tsv", "r");
-    $write = @fopen(__DIR__ . "/../alix/src/main/resources/com/github/oeuvres/alix/fr/word.tsv", "w");
+    $write = @fopen(__DIR__ . "/../alix/src/main/resources/com/github/oeuvres/alix/fr/word.csv", "w");
     if ($read) {
         while (($line = fgets($read, 4096)) !== false) {
             $data = str_getcsv($line, "\t");
             if ($data[0] == $data[1]) $data[1] = "";
             $data = array_slice($data, 0, 3);
-            fwrite($write, implode("\t", $data) . "\n");
+            fwrite($write, implode(",", $data) . "\n");
         }
         if (!feof($read)) {
             echo "Error: unexpected fgets() fail\n";
