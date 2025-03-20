@@ -123,7 +123,7 @@ function merge()
 function toWord()
 {
     $read = @fopen(__DIR__ . "/grammalecte.tsv", "r");
-    $write = @fopen(__DIR__ . "/../alix/src/main/resources/com/github/oeuvres/alix/fr/word.csv", "w");
+    $write = @fopen(dirname(__DIR__) . "/alix/src/main/resources/com/github/oeuvres/alix/fr/word.csv", "w");
     if ($read) {
         while (($line = fgets($read, 4096)) !== false) {
             $data = str_getcsv($line, "\t");
