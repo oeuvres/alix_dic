@@ -139,4 +139,30 @@ function toWord()
     }
 }
 
+function ppas()
+{
+    $write = "";
+    $read = @fopen(__DIR__ . "/grammalecte.tsv", "r");
+    while (($line = fgets($read, 4096)) !== false) {
+        $data = str_getcsv($line, "\t");
+        if (!isset($data[3]) || strpos($data[3], "ppas adj") === FALSE) {
+            $write .= $line;
+            continue;
+        }
+        else if ($data[1] != "ADJ") {
+            $write .= $line;
+            continue;
+        }
+        else {
+            $write .= $data[0] . "\tADJ\t" . preg_replace("/e?s?$/", "", $data[0]) . "\t" . $data[3] . "\n";
+            $write .= $data[0] . "\tVERB\t" . $data[2] . "\t" . $data[3] . "\n";
+        }
+    }
+    if (!feof($read)) {
+        echo "Error: unexpected fgets() fail\n";
+    }
+    fclose($read);
+    file_put_contents(__DIR__ . "/grammalecte.tsv", $write);
+}
+
 toWord();
